@@ -568,6 +568,13 @@ class ScholarArticleParser120726(ScholarArticleParser):
             if not hasattr(tag, 'name'):
                 continue
             if str(tag).lower().find('.pdf'):
+                # Yinon's patch to ignore bug when tag = {NavigableString} Showing the best result for this search.
+                try:
+                    tag.find('div', {'class': 'gs_ttss'})
+                except TypeError:
+                    print("ignoring TypeError Exception: slice indices must be integers or None or have an __index__ method")
+                    continue
+
                 if tag.find('div', {'class': 'gs_ttss'}):
                     self._parse_links(tag.find('div', {'class': 'gs_ttss'}))
 
